@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   },
   pwa: {
     registerType: 'autoUpdate',
+    includeAssets: ['favicon.svg'],
     manifest: {
       name: 'John Doe Portfolio',
       short_name: 'Portfolio',
@@ -17,6 +18,8 @@ export default defineNuxtConfig({
       display: 'standalone',
       orientation: 'portrait',
       start_url: '/',
+      scope: '/',
+      id: '/',
       icons: [
         {
           src: 'pwa-192x192.png',
@@ -34,11 +37,20 @@ export default defineNuxtConfig({
           type: 'image/png',
           purpose: 'any maskable'
         }
+      ],
+      categories: ['portfolio', 'development', 'professional'],
+      screenshots: [
+        {
+          src: 'screenshot.png',
+          sizes: '1920x1080',
+          type: 'image/png',
+          label: 'Portfolio Homepage'
+        }
       ]
     },
     workbox: {
       navigateFallback: '/',
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff,woff2}'],
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -63,7 +75,8 @@ export default defineNuxtConfig({
     devOptions: {
       enabled: true,
       suppressWarnings: true,
-      type: 'module'
+      type: 'module',
+      navigateFallback: '/'
     }
   }
 })
