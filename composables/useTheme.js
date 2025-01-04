@@ -1,20 +1,20 @@
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 export function useTheme() {
   const theme = ref(
     typeof localStorage !== 'undefined'
       ? localStorage.getItem('theme') || 'light'
-      : 'light',
+      : 'light'
   )
 
-  const updateTheme = () => {
+  function updateTheme() {
     if (typeof document !== 'undefined') {
       document.documentElement.classList.remove('light', 'dark')
       document.documentElement.classList.add(theme.value)
     }
   }
 
-  const toggleTheme = () => {
+  function toggleTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('theme', theme.value)
@@ -22,12 +22,10 @@ export function useTheme() {
     updateTheme()
   }
 
-  onMounted(() => {
-    watch(theme, updateTheme, { immediate: true })
-  })
+  watch(theme, updateTheme, { immediate: true })
 
   return {
     theme,
-    toggleTheme,
+    toggleTheme
   }
 }
