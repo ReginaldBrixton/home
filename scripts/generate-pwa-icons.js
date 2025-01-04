@@ -1,25 +1,25 @@
-import sharp from 'sharp';
-import { mkdir } from 'fs/promises';
-import { dirname } from 'path';
+import { promises as fs } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import sharp from 'sharp'
 
-const sizes = [192, 512];
-const source = './public/favicon.svg';
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const sizes = [192, 512]
+const inputFile = join(__dirname, '../public/favicon.svg')
 
 async function generateIcons() {
-  try {
-    // Ensure public directory exists
-    await mkdir('./public', { recursive: true });
+  const publicDir = join(__dirname, '../public')
 
-    for (const size of sizes) {
-      await sharp(source)
-        .resize(size, size)
-        .toFile(`./public/pwa-${size}x${size}.png`);
-      
-      console.log(`Generated ${size}x${size} icon`);
-    }
-  } catch (error) {
-    console.error('Error generating icons:', error);
+  // Ensure public directory exists
+  await fs.mkdir(publicDir, { recursive: true })
+
+  for (const size of sizes) {
+    const outputFile = join(publicDir, `pwa-${size}x${size}.png`)
+    await sharp(inputFile)
+      .resize(size, size)
+      .toFile(outputFile)
+    console.log(`Generated ${size}x${size} icon`)
   }
 }
 
-generateIcons(); 
+generateIcons().catch(console.error)
