@@ -1,5 +1,4 @@
-import process from 'node:process'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 export function useTheme() {
   const theme = ref(
@@ -23,9 +22,9 @@ export function useTheme() {
     updateTheme()
   }
 
-  if (process.client) {
+  onMounted(() => {
     watch(theme, updateTheme, { immediate: true })
-  }
+  })
 
   return {
     theme,

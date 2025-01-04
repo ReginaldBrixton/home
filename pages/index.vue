@@ -1,6 +1,37 @@
 <script setup>
+import { onMounted, ref, watch } from 'vue'
+
 definePageMeta({
   layout: 'default',
+})
+
+const theme = ref(
+  typeof localStorage !== 'undefined'
+    ? localStorage.getItem('theme') || 'light'
+    : 'light',
+)
+
+function updateTheme() {
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.remove('light', 'dark')
+    document.documentElement.classList.add(theme.value)
+  }
+}
+
+function toggleTheme() {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('theme', theme.value)
+  }
+  updateTheme()
+}
+
+onMounted(() => {
+  watch(theme, updateTheme, { immediate: true })
+})
+
+defineExpose({
+  toggleTheme,
 })
 
 const projects = [
@@ -91,6 +122,12 @@ const experiences = [
           >
             Contact Me
           </a>
+          <button
+            @click="toggleTheme"
+            class="p-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
+            {{ theme === 'light' ? '🌙' : '☀️' }}
+          </button>
         </div>
       </div>
     </section>
