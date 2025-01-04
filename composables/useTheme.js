@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { ref, watch } from 'vue'
 
 export function useTheme() {
@@ -7,19 +8,19 @@ export function useTheme() {
       : 'light',
   )
 
+  const updateTheme = () => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.remove('light', 'dark')
+      document.documentElement.classList.add(theme.value)
+    }
+  }
+
   const toggleTheme = () => {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('theme', theme.value)
     }
     updateTheme()
-  }
-
-  const updateTheme = () => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.remove('light', 'dark')
-      document.documentElement.classList.add(theme.value)
-    }
   }
 
   if (process.client) {
